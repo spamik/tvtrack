@@ -45,12 +45,12 @@ class TVTrackSettings:
     def parsePrograms(self, file):
         # rozparsuje soubor se sledovanými programy
         f = open(file, 'r')
-        r = re.compile("^(?P<plugin>[\w]+):(?P<program>.*)$")
+        r = re.compile("^(?P<plugin>[\w]+):\"(?P<program>[^\"]+)\":(?P<url>.*)$")
         lines = f.readlines()
         for i in lines:
             m = r.match(i)
             if(m):
-                self.programs.append((m.group('plugin'), m.group('program')))
+                self.programs.append((m.group('plugin'), m.group('url'), m.group('program')))
         f.close()
 
     def getPrograms(self):

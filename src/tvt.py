@@ -17,9 +17,10 @@ def main():
     for i in programs:
         f, file, desc = imp.find_module(i[0], ['tvtrack/tvschedules'])
         module = imp.load_module(i[0], f, file, desc)
-        for i in module.findNewProgram(i[1], st.getLastCheck()):
-            new_epizodes.append(i) # přidáme si do seznamu nové nalezené epizody
+        for j in module.findNewProgram(i[1], st.getLastCheck()):
+            j['program'] = i[2]
+            new_epizodes.append(j) # přidáme si do seznamu nové nalezené epizody
     for i in new_epizodes:
-        print "Nalezena nova epizoda:", i['episode'], "(" + i['name'] + ")", "odvysilana", datetime.strftime(i['aired'], "%d.%m.%Y")
+        print "Nalezena nova epizoda:", i['program'], i['episode'], "(" + i['name'] + ")", "odvysilana", datetime.strftime(i['aired'], "%d.%m.%Y")
 
 main()
