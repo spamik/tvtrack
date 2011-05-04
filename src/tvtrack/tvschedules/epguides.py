@@ -6,9 +6,14 @@ import httplib
 import re
 import datetime
 
-def findNewProgram(program_name):
+def findNewProgram(program_name, last_check):
     # dostal jméno programu a zkusí nalézt nové vydání
     episodes = parseEpisodes(downloadProgramPage('/' + program_name + '/'))
+    new_episodes = []
+    for episode, name, aired in episodes:
+        if(aired > last_check and aired <= datetime.datetime.today()):
+            new_episodes.append({'episode': episode, 'name': name, 'aired': aired})
+    return new_episodes
 
 def downloadProgramPage(url):
     # stáhne HTML dané stránky
@@ -31,7 +36,7 @@ def parseEpisodes(page):
             break
         elif(mode == 'content'):
             content.append(i)
-    episode_re = re.compile("[\d]+[\s]+(?P<episode>[\d]{1,2}\-[\d]{1,3})[\s]+[\w\d#]*[\s]+(?P<airdate>[\d]{2}/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Noc|Dec)/[\d]{2})[\s]+\<a href='.*'\>(?P<name>.*)\<\/a\>[\s]*$")
+    episode_re = re.compile("[\d]+[\s]+(?P<episode>[\d]{1,2}\-[\d]{1,3})[\s]+[\w\d#]*[\s]+(?P<airdate>[\d]{2}/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/[\d]{2})[\s]+\<a href='[^>]+'\>(?P<name>[^<]+)\<\/a\>.*$")
     episodes = []
     for i in content:
         m = episode_re.match(i)

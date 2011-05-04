@@ -2,6 +2,7 @@
 
 # třída pro načítání nastavení
 
+from datetime import datetime
 import os
 import re
 
@@ -18,6 +19,17 @@ class TVTrackSettings:
         self.programs = []
         self.parseRC(rc)
         self.parsePrograms(programs)
+        # načtení data poslední kontroly
+        last_check = os.path.join(dir, 'last_check')
+        if(os.path.isfile(last_check)):
+            # soubor existuje - načteme datum poslední kontroly
+            f = open(last_check, 'r')
+            date = f.readline()
+            self.last_check = datetime.strptime(date, "%d/%b/%y")
+            f.close()
+        else:
+            # nemáme datum poslední kontroly, použijeme 1.1.1970
+            self.last_check = datetime.strptime("01/Jan/70", "%d/%b/%y")
 
     def parseRC(self, file):
         # rozparsuje rc soubor s hlavním nastavením
@@ -44,3 +56,6 @@ class TVTrackSettings:
     def getPrograms(self):
         # vrátí seznam hlídaných programů
         return self.programs
+
+    def getLastCheck(self):
+        return self.last_check
