@@ -22,5 +22,6 @@ def main():
             new_epizodes.append(j) # přidáme si do seznamu nové nalezené epizody
     for i in new_epizodes:
         print "Nalezena nova epizoda:", i['program'], i['episode'], "(" + i['name'] + ")", "odvysilana", datetime.strftime(i['aired'], "%d.%m.%Y")
+    st.updateLastCheck()
 
 main()

@@ -6,12 +6,17 @@ from datetime import datetime
 import os
 import re
 
+GLOBAL_RC_FILE = 'tvtrack.rc'
+PROGRAM_RC_FILE = 'programs.rc'
+LASTCHECK_FILE = 'last_check'
+LASTCHECK_FORMAT = '%d/%b/%y'
+
 class TVTrackSettings:
     def __init__(self):
         # konstruktor - načteme konfigurační soubory
-        dir = os.path.join(os.environ['HOME'], '.tvtrack')
-        rc = os.path.join(dir, 'tvtrack.rc')
-        programs = os.path.join(dir, 'programs.rc')
+        dir = self.getConfigDir()
+        rc = os.path.join(dir, GLOBAL_RC_FILE)
+        programs = os.path.join(dir, PROGRAM_RC_FILE)
         if(not os.path.isfile(rc) or not os.path.isfile(programs)):
             # konfigurační soubory neexistují
             raise IOError("Please make first configuration files and then run tvtrack")
@@ -20,16 +25,20 @@ class TVTrackSettings:
         self.parseRC(rc)
         self.parsePrograms(programs)
         # načtení data poslední kontroly
-        last_check = os.path.join(dir, 'last_check')
+        last_check = os.path.join(dir, LASTCHECK_FILE)
         if(os.path.isfile(last_check)):
             # soubor existuje - načteme datum poslední kontroly
             f = open(last_check, 'r')
             date = f.readline()
-            self.last_check = datetime.strptime(date, "%d/%b/%y")
+            self.last_check = datetime.strptime(date, LASTCHECK_FORMAT)
             f.close()
         else:
             # nemáme datum poslední kontroly, použijeme 1.1.1970
-            self.last_check = datetime.strptime("01/Jan/70", "%d/%b/%y")
+            self.last_check = datetime.strptime("01/Jan/70", LASTCHECK_FORMAT)
+
+    def getConfigDir(self):
+        # vrátí složku s konfigurací
+        return os.path.join(os.environ['HOME'], '.tvtrack')
 
     def parseRC(self, file):
         # rozparsuje rc soubor s hlavním nastavením
@@ -59,3 +68,9 @@ class TVTrackSettings:
 
     def getLastCheck(self):
         return self.last_check
+
+    def updateLastCheck(self):
+        # nastaví poslední kontrolu na aktuální datum
+        f = open(os.path.join(self.getConfigDir(), LASTCHECK_FILE), 'w')
+        f.write(datetime.strftime(datetime.today(), LASTCHECK_FORMAT))
+        f.close()
