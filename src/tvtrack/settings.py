@@ -14,10 +14,10 @@ class TVTrackSettings:
         if(not os.path.isfile(rc) or not os.path.isfile(programs)):
             # konfigurační soubory neexistují
             raise IOError("Please make first configuration files and then run tvtrack")
-        self.parseRC(rc)
-        self.parsePrograms(programs)
         self.rcsettings = {}
         self.programs = []
+        self.parseRC(rc)
+        self.parsePrograms(programs)
 
     def parseRC(self, file):
         # rozparsuje rc soubor s hlavním nastavením
@@ -41,3 +41,6 @@ class TVTrackSettings:
                 self.programs.append((m.group('plugin'), m.group('program')))
         f.close()
 
+    def getPrograms(self):
+        # vrátí seznam hlídaných programů
+        return self.programs
