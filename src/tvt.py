@@ -7,9 +7,13 @@ from tvtrack.settings import TVTrackSettings
 import imp
 from datetime import datetime
 
-def fillTemplate(template, program, episode, episode_name, airdate):
+def fillTemplate(template, program, episode, episode_name, airdate, dateformat):
     # vyplní šablonu hodnotami
-    pass
+    s = template.replace('%n', program)
+    s = s.replace('%e', episode)
+    s = s.replace('%f', episode_name)
+    s = s.replace('%a', datetime.strftime(airdate, dateformat))
+    return s
 
 def main():
     try:
@@ -25,8 +29,8 @@ def main():
             j['program'] = i[2]
             new_epizodes.append(j) # přidáme si do seznamu nové nalezené epizody
     for i in new_epizodes:
-        subject = fillTemplate(st.getSubject(), i['program'], i['episode'], i['name'], i['aired'])
-        body = fillTemplate(st.getBody(), i['program'], i['episode'], i['name'], i['aired'])
+        subject = fillTemplate(st.getSubject(), i['program'], i['episode'], i['name'], i['aired'], st.getDateFormat())
+        body = fillTemplate(st.getBody(), i['program'], i['episode'], i['name'], i['aired'], st.getDateFormat())
         print "Subject:", subject
         print ""
         print body

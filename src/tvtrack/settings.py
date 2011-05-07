@@ -43,12 +43,14 @@ class TVTrackSettings:
     def parseRC(self, file):
         # rozparsuje rc soubor s hlavním nastavením
         f = open(file, 'r')
-        r = re.compile("^(?P<key>[\w_]+)[\s]?=[\s]?(?P<val>[\w\d]+)$")
+        r = re.compile("(?P<key>[\w_]+)[\s]?=[\s]?(?P<val>.+)")
         lines = f.readlines()
         for i in lines:
             m = r.match(i)
             if(m):
-                self.rcsettings[m.group('key')] = m.group['val']
+                key = m.group('key')
+                val = m.group('val')
+                self.rcsettings[key] = val
         f.close()
 
     def parsePrograms(self, file):
@@ -94,3 +96,7 @@ class TVTrackSettings:
     def getBody(self):
         # vrátí šablonu na tělo zprávy
         return self.rcsettings['body']
+
+    def getDateFormat(self):
+        # vrátí formát pro datum
+        return self.rcsettings['dateformat']
