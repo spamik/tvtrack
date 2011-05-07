@@ -74,3 +74,23 @@ class TVTrackSettings:
         f = open(os.path.join(self.getConfigDir(), LASTCHECK_FILE), 'w')
         f.write(datetime.strftime(datetime.today(), LASTCHECK_FORMAT))
         f.close()
+
+    def getSMTP(self):
+        # vrátí SMTP server, přes který posílat zprávy
+        return self.rcsettings['smtp_host']
+
+    def getTo(self):
+        # vrátí adresu kam posílat notifikace
+        return self.rcsettings['to']
+
+    def getFrom(self):
+        # vrátí adresu od koho notifikace bude
+        return self.rcsettings['from']
+
+    def getSubject(self):
+        # vrátí šablonu na předmět zprávy
+        return self.rcsettings['subject']
+
+    def getBody(self):
+        # vrátí šablonu na tělo zprávy
+        return self.rcsettings['body']
