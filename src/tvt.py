@@ -4,6 +4,7 @@
 # TVTrack - nástroj pro automatické notifikace na nové seriály
 
 from tvtrack.settings import TVTrackSettings
+from tvtrack.mailnotify import sendNotification
 import imp
 from datetime import datetime
 
@@ -31,9 +32,7 @@ def main():
     for i in new_epizodes:
         subject = fillTemplate(st.getSubject(), i['program'], i['episode'], i['name'], i['aired'], st.getDateFormat())
         body = fillTemplate(st.getBody(), i['program'], i['episode'], i['name'], i['aired'], st.getDateFormat())
-        print "Subject:", subject
-        print ""
-        print body
+        sendNotification(st.getSMTP(), st.getFrom(), st.getTo(), subject, body)
     st.updateLastCheck()
 
 main()
