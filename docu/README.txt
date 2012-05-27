@@ -57,9 +57,23 @@ epguides:"How I Met Your Mother":HowIMetYourMother
 
 Rozšíření
 
+Jednotlivé zdroje informací, odkud brát přehled o nově vyšlých seriálech, jsou v tvtracku
+koncipovány jako pluginy. V konfiguraci je u každého seriálu specifikováno jakého pluginu
+se má zeptat. Plugin je standardní python modul. Je potřeba, aby byl umístěn v podadresáři
+tvschedules a musí mít definovanou funkci findNewProgram. Ta přebírá dva argumenty:
+- program_name - ID seriálu, který se sleduje (to ID, které je v konfiguraci)
+- last_check - datum a čas, kdy byla vykonána poslední kontrola na nové seriály. Předává
+se jako instance třídy datetime
+
+Funkce findNewProgram následně vrací seznam slovníků. Každá položka seznamu znamená jednu
+vyšlou epizodu. Slovník má tyto klíče:
+- episode - číslo epizody (např. S02E03)
+- name - jméno epizody
+- aired - datum odvysílání
 
 Licence
 
+Celý program je šířen pod GNU GPL licencí. Pro více informací si prosím přečtěte soubor LICENSE.txt
 
 --
 
